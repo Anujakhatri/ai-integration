@@ -3,10 +3,15 @@ name: Healthcare Claims API
 on:
   push:
     branches: [main]
+    paths:
+      - 'healthcare_claims_api/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: healthcare_claims_api
 
     services:
       postgres:

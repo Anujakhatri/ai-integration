@@ -17,6 +17,11 @@ def upload_claims(
     db: Session = Depends(get_db),
     current_user: dict = Depends(require_admin)  # admin only!
 ):
+
+    if file.filename is None:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    filename = file.filename
     # 1. CSV file ho ki hoina check
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Only CSV files accepted")
@@ -66,7 +71,7 @@ def upload_claims(
     log_upload(
         db=db,
         username=current_user["username"],
-        filename=file.filename,
+        filename=filename,
         total=valid_count + invalid_count,
         valid=valid_count,
         invalid=invalid_count

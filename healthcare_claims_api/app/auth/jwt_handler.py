@@ -12,18 +12,18 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # FastAPI le Authorization header bata token lanchha
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 #for trial
 FAKE_USERS ={
     "admin_user":{
         "username":"admin_user",
-        "hashed_password":"hashed_password",
+        "hashed_password":os.getenv("ADMIN_HASHED_PASSWORD"),
         "role":"admin",
     },
     "read_only_user":{
         "username":"read_only_user",
-        "hashed_password" : "hashed_password",
+        "hashed_password" : os.getenv("READONLY_HASHED_PASSWORD"),
         "role" : "read_only"
     }
 }
@@ -53,7 +53,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("username")
+        username: str = payload.get("sub")
         role: str = payload.get("role")
         if username is None:
             raise credentials_exception

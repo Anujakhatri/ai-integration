@@ -42,3 +42,16 @@ class ClaimSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id          = Column(Integer, primary_key=True, index=True)
+    username    = Column(String, nullable=False)      # ko le garo
+    action      = Column(String, nullable=False)      # "CSV_UPLOAD", "QUERY"
+    filename    = Column(String, nullable=True)       # kun file
+    total       = Column(Integer, default=0)          # kati records
+    valid       = Column(Integer, default=0)
+    invalid     = Column(Integer, default=0)
+    timestamp   = Column(DateTime, server_default=func.now())

@@ -20,6 +20,6 @@ Base = declarative_base()
 def get_db():
     db = SessionLocal()
     try:
-        yield db
+        yield db  #similar to return but difference is yo pachi ko code ni run huncha
     finally:
         db.close()

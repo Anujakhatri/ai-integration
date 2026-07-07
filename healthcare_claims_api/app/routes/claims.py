@@ -8,6 +8,7 @@ import csv
 import io
 from app.audit.logger import log_upload
 router = APIRouter(prefix="/claims", tags=["Claims"])
+from datetime import date
 
 
 @router.post("/upload")
@@ -37,7 +38,7 @@ def upload_claims(
                 icd10_code=row["icd10_code"],
                 cpt_code=row["cpt_code"],
                 paid_amount=float(row["paid_amount"]),
-                date_of_service=row["date_of_service"]
+                date_of_service=date.fromisoformat(row["date_of_service"])
             )
 
             # DB ma store garchha

@@ -1,0 +1,57 @@
+name: Healthcare Claims API
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: claims_db_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+          
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/claims_db_test
+      JWT_SECRET: ${{ secrets.JWT_SECRET_KEY }}
+      ADMIN_HASHED_PASSWORD: ${{ secrets.ADMIN_HASHED_PASSWORD }}
+      READONLY_HASHED_PASSWORD: ${{ secrets.READONLY_HASHED_PASSWORD }}
+      ALGORITHM: HS256
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Type check
+        run: mypy .
+
+#  docker:
+#    runs-on: ubuntu-latest
+#    needs: test  # test pass bhayepachi matra build
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Build Docker image
+#        run: docker build -t healthcare-claims-api .

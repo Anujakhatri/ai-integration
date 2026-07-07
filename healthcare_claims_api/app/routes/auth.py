@@ -14,7 +14,13 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect username or password",
         )
     # 2. password correct chaa??
-    if not verify_password(form_data.password, user["hashed_password"]):
+    hashed = user.get("hashed_password")
+    if not hashed:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+        )
+    if not verify_password(form_data.password, hashed):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",

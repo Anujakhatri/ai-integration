@@ -292,7 +292,7 @@ curl http://localhost:8000/claims/audit-logs \
 
 ---
 
-## Running Tests
+## Running Tests(if you want to test with each case)
 
 ```bash
 pytest app/tests/ -v
@@ -302,7 +302,7 @@ pytest app/tests/ -v
 
 ## CI/CD
 
-GitHub Actions pipeline runs on every push to `main` or `dev`:
+GitHub Actions pipeline runs on every push to `main`:
 
 1. **Test job** — Spins up PostgreSQL, runs pytest
 2. **Docker job** — Builds Docker image (runs only after tests pass)
